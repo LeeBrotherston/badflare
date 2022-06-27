@@ -121,7 +121,6 @@ func isCF(ip string) bool {
 	for _, subnet := range cloudflareBlocks {
 		_, thisSubnet, _ := net.ParseCIDR(subnet)
 		if thisSubnet.Contains(ipParsed) {
-			fmt.Printf("Seems to be Cloudflare")
 			return true
 		}
 	}
