@@ -63,7 +63,6 @@ func main() {
 	// For each response, check if it is in the cloudflare address block
 	for _, ip := range iplookup {
 		if isCF(ip.String()) {
-			fmt.Printf("'%s' has IP '%s' which is part of a Cloudflare block\n", *hostname, ip.String())
 			isCloudflare = true
 		} else {
 			isNonCloudflare = true
@@ -73,6 +72,17 @@ func main() {
 	// A mix of cloudflare and non-cloudflare IPs returned from DNS
 	if isCloudflare && isNonCloudflare {
 		fmt.Printf("Mixed CF and non-CF response.  Real host may be in DNS?\n")
+		for _, ip := range iplookup {
+			if isCF(ip.String()) {
+				fmt.Printf("%s (Cloudflare)\n", ip.String())
+			} else {
+				fmt.Printf("%s (non-Cloudflare)\n", ip.String())
+			}
+		}
+	}
+
+	if isCloudflare {
+		fmt.Printf("'%s' has IP(s) which are part of the Cloudflare network\n", *hostname)
 	}
 
 	// Do this after the above for loop, otherwise this will run multiple times if
