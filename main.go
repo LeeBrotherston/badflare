@@ -90,8 +90,7 @@ func main() {
 	// :)
 	if isCloudflare {
 		shodanQuery := fmt.Sprintf("hostname:%s", *hostname)
-		client := shodan.NewEnvClient(nil)
-		client.Token = *shodanAPI
+		client := shodan.NewClient(nil, *shodanAPI)
 		shodanOptions := shodan.HostQueryOptions{
 			Query:  shodanQuery,
 			Facets: "ip",
@@ -101,6 +100,7 @@ func main() {
 		shodanResponse, err := client.GetHostsForQuery(context.Background(), &shodanOptions)
 		if err != nil {
 			fmt.Printf("Shodan Issue: %v\n", err)
+			os.Exit(0)
 		}
 
 		// Let's look at the responses and see if any of them are *not* Cloudflare (i.e.
